@@ -1,10 +1,58 @@
-var taskManager = new TaskManager();
-
+var taskManager = new TaskManager(),
+  taskEditor;
+var taskEdit;
 // keeps track of all the Task instances
 function TaskManager() {
   this.tasks = [];
   this.taskMap = {};
 }
+
+function TaskEditor() {
+  var me = this;
+
+  this.el = $('#taskEdit');
+  this.task = undefined;
+
+  this.el.on('click', 'a', function (event) {
+    me.close();
+    event.preventDefault();
+    return false;
+  });
+
+  // save data to Task
+  this.el.on('submit', 'form', function (event) {
+    var valuesArr = $(this).serializeArray(),
+      values = {};
+    
+    $.each(valuesArr, function (index, pair) {
+      values[pair.name] = pair.value;
+    });
+
+    me.task.setLabel(values.label);
+    me.task.description = values.description;
+
+    event.preventDefault();
+    me.close();
+    return false;
+  });
+
+  this.editTask = function (task) {
+    var me = this;
+
+    this.task = task;
+
+    this.el.find('[name="label"]').val(task.label);
+    this.el.find('[name="description"]').val(task.description);
+    
+    this.el.fadeIn('fast', function () {
+      me.el.find('input').first().focus();
+    });
+  };
+
+  this.close = function () {
+    this.el.fadeOut('fast');
+  };
+};
 
 TaskManager.prototype.add = function(task) {
   var index = this.tasks.push(task) - 1;
@@ -17,11 +65,23 @@ TaskManager.prototype.getById = function(id) {
 
 function Task(parentTaskId) {
   this.id = Date.now();
+  this.label = 'new task';
+  this.description = undefined;
   this.subTasks = [];
   this.parentTaskId = parentTaskId;
   taskManager.add(this);
   this.createEl();
+  this.setLabel(this.label);
 }
+
+Task.prototype.setLabel = function (label) {
+  this.label = label;
+  this.getEl().find('.text').first().html(label);
+};
+
+Task.prototype.editTask = function () {
+  taskEditor.editTask(this);
+};
 
 Task.prototype.createEl = function () {
   var parentTask;
@@ -54,7 +114,7 @@ Task.prototype.getSubTaskEl = function () {
 
 $(function () {
   var tasks = [];
-  var taskEdit = $('#taskEdit');
+  taskEdit = $('#taskEdit');
 
   function deleteTask(taskEl) {
     console.log('deleteTask');
@@ -62,12 +122,6 @@ $(function () {
 
   function toggleRecordTask(taskEl) {
     console.log('toggleRecordTask');
-  }
-
-  function editTask(taskEl, task) {
-    taskEdit.find('[name="label"]').val(taskEl.find('.text').first().html());
-    taskEdit.data('taskEl', taskEl);
-    openTaskEdit(taskEl);
   }
 
   function setTaskLabel(taskEl, label) {
@@ -88,7 +142,8 @@ $(function () {
 
       switch (event.target.className) {
       case 'button edit':
-        editTask(taskEl, task);
+        // editTask(taskEl, task);
+        task.editTask();
         break;
       case 'button x':
         deleteTask(task);
@@ -112,15 +167,7 @@ $(function () {
     return false;
   }
 
-  function closeTaskEdit() {
-    taskEdit.fadeOut('fast');
-  }
-
-  function openTaskEdit(task) {
-    taskEdit.fadeIn('fast', function () {
-      taskEdit.find('input').first().focus();
-    });
-  }
+  
 
   $('body').on('click', '.task .button, .task .label', onTaskClick);
 
@@ -128,23 +175,7 @@ $(function () {
     new Task();
   });
 
-  taskEdit.on('click', 'a', function (event) {
-    closeTaskEdit();
-    event.preventDefault();
-    return false;
-  });
+  
 
-  taskEdit.on('submit', 'form', function (event) {
-    var valuesArr = $(this).serializeArray(),
-      values = {};
-    
-    $.each(valuesArr, function (index, pair) {
-      values[pair.name] = pair.value;
-    });
-
-    setTaskLabel(taskEdit.data('taskEl'), values.label);
-    event.preventDefault();
-    closeTaskEdit();
-    return false;
-  });
+  taskEditor = new TaskEditor();
 });

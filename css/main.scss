@@ -73,10 +73,10 @@ body {
 		// controls that appear under the task
 		.controls {
 
+			// display: none;
 			width: ($controlEdgeWidth * 2) + ($controlButtonWidth * 4);
 			margin: auto;
 
-			display: none;
 
 			span {
 				float: left;

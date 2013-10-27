@@ -33,8 +33,7 @@ body {
         text-decoration: line-through; }
   .taskContainer .task .controls {
     width: 126px;
-    margin: auto;
-    display: none; }
+    margin: auto; }
     .taskContainer .task .controls span {
       float: left; }
     .taskContainer .task .controls .edge {
