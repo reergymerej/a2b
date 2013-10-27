@@ -4,134 +4,142 @@ body {
 	background-color: steelblue;
 }
 
-.task {
-	$controlButtonWidth: 25px;
-	$controlButtonHeight: 20px;
-	$controlEdgeWidth: 13px;
+.taskContainer {
+	.task {
+		$controlButtonWidth: 25px;
+		$controlButtonHeight: 20px;
+		$controlEdgeWidth: 13px;
 
-	display: inline-block;
+		display: inline-block;
 
-	// This is the visible part of the task.
-	.label {
-		$taskWidth: 200px;
-		$taskHeight: 20px;
-		$checkWidth: 20px;
-		$edgeWidth: 5px;
+		// This is the visible part of the task.
+		.label {
+			$taskWidth: 200px;
+			$taskHeight: 20px;
+			$checkWidth: 20px;
+			$edgeWidth: 5px;
 
-		height: $taskHeight;
-		line-height: $taskHeight;
-
-		// test
-		$taskBg: url('images/task.png') repeat-x;
-
-		div {
-			float: left;
-		}
-		
-		// left/right edges
-		.edge {
-			display: inline-block;
-			width: $edgeWidth;
 			height: $taskHeight;
+			line-height: $taskHeight;
 
-			&.left {
-				background: url('images/task-edge-left.png') no-repeat;	
+			// test
+			$taskBg: url('images/task.png') repeat-x;
+
+			div {
+				float: left;
+			}
+			
+			// left/right edges
+			.edge {
+				display: inline-block;
+				width: $edgeWidth;
+				height: $taskHeight;
+
+				&.left {
+					background: url('images/task-edge-left.png') no-repeat;	
+				}
+
+				&.right {
+					background: url('images/task-edge-right.png') no-repeat;	
+				}
 			}
 
-			&.right {
-				background: url('images/task-edge-right.png') no-repeat;	
+			// checkbox
+			.check {
+				display: inline-block;
+				width: $checkWidth;
+				background: $taskBg;
+
+				.input {
+					margin: auto;
+				}
+			}
+
+			// visible label in task
+			.text {
+				background: $taskBg;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				display: inline-block;
+				width: $taskWidth - (2 * $edgeWidth) - $checkWidth;
+
+				&.done {
+					text-decoration: line-through;
+				}
 			}
 		}
 
-		// checkbox
-		.check {
-			display: inline-block;
-			width: $checkWidth;
-			background: $taskBg;
+		// controls that appear under the task
+		.controls {
 
-			.input {
-				margin: auto;
+			width: ($controlEdgeWidth * 2) + ($controlButtonWidth * 4);
+			margin: auto;
+
+			display: none;
+
+			span {
+				float: left;
 			}
-		}
 
-		// visible label in task
-		.text {
-			background: $taskBg;
-			white-space: nowrap;
-			overflow: hidden;
-			text-overflow: ellipsis;
-			display: inline-block;
-			width: $taskWidth - (2 * $edgeWidth) - $checkWidth;
+			.edge {
+				width: $controlEdgeWidth;
+				height: $controlButtonHeight;
+			}
 
-			&.done {
-				text-decoration: line-through;
+			.edge.left {
+				background: url('images/edge-left.png') no-repeat;
+			}
+
+			.edge.right {
+				background: url('images/edge-right.png') no-repeat;
+			}
+
+			.button {
+				// background-image: url('images/button.png');
+				text-align: center;
+				width: $controlButtonWidth;
+				height: $controlButtonHeight;
+
+				&:hover {
+					cursor: pointer;
+					background-position: 0px (-$controlButtonHeight);
+				}
+
+				&.edit {
+					background-image: url('images/button-edit.png');
+				} 
+
+				&.x {
+					background-image: url('images/button-x.png');
+				} 
+
+				&.record {
+					background-image: url('images/button-record.png');
+				} 
+
+				&.add {
+					background-image: url('images/button-add.png');
+				} 
 			}
 		}
 	}
-
-	// controls that appear under the task
-	.controls {
-
-		width: ($controlEdgeWidth * 2) + ($controlButtonWidth * 4);
-		margin: auto;
-
-		display: none;
-
-		span {
-			float: left;
-		}
-
-		.edge {
-			width: $controlEdgeWidth;
-			height: $controlButtonHeight;
-		}
-
-		.edge.left {
-			background: url('images/edge-left.png') no-repeat;
-		}
-
-		.edge.right {
-			background: url('images/edge-right.png') no-repeat;
-		}
-
-		.button {
-			// background-image: url('images/button.png');
-			text-align: center;
-			width: $controlButtonWidth;
-			height: $controlButtonHeight;
-
-			&:hover {
-				cursor: pointer;
-				background-position: 0px (-$controlButtonHeight);
-			}
-
-			&.edit {
-				background-image: url('images/button-edit.png');
-			} 
-
-			&.x {
-				background-image: url('images/button-x.png');
-			} 
-
-			&.record {
-				background-image: url('images/button-record.png');
-			} 
-
-			&.add {
-				background-image: url('images/button-add.png');
-			} 
-		}
+	
+	.subtasks {
+		margin-top: 0;
+		margin-bottom: 0;
 	}
 }
 
 #taskEdit {
+	display: none;
 	position: absolute;
 	top: 0;
 	left: 0;
 	height: 100%;
 	width: 100%;
 	overflow: hidden;
-	
+
 	.blackout {
 		position: absolute;
 		top: 0;

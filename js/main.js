@@ -1,15 +1,60 @@
+var taskManager = new TaskManager();
+
+// keeps track of all the Task instances
+function TaskManager() {
+  this.tasks = [];
+  this.taskMap = {};
+}
+
+TaskManager.prototype.add = function(task) {
+  var index = this.tasks.push(task) - 1;
+  this.taskMap[task.id] = index;
+};
+
+TaskManager.prototype.getById = function(id) {
+  return this.tasks[this.taskMap[id]];
+};
+
+function Task(parentTaskId) {
+  this.id = Date.now();
+  this.subTasks = [];
+  this.parentTaskId = parentTaskId;
+  taskManager.add(this);
+  this.createEl();
+}
+
+Task.prototype.createEl = function () {
+  var parentTask;
+
+  this.el = $(_.template($('#task-template').html(), {})).data('taskId', this.id);
+  this.el.attr('id', this.id);
+  
+  if (this.parentTaskId === undefined) {
+    $('#taskWrapper').append(this.el);
+  } else {
+    parentTask = taskManager.getById(this.parentTaskId);
+    parentTask.getSubTaskEl().append(this.el);
+  }
+};
+
+Task.prototype.addSubTask = function () {
+  this.subTasks.push(new Task(this.id));
+};
+
+Task.prototype.getEl = function () {
+  return $('#' + this.id);
+  // return this.el;
+};
+
+Task.prototype.getSubTaskEl = function () {
+  return this.getEl().find('.subtasks').first();
+};
+
+ // ===============================
+
 $(function () {
   var tasks = [];
   var taskEdit = $('#taskEdit');
-
-  function Task() {
-    this.id = Date.now();
-  }
-
-  function addSubTask(taskEl) {
-    console.log('addSubTask');
-    taskEl.parent().children('.subtasks').append(getNewTaskElement());
-  }
 
   function deleteTask(taskEl) {
     console.log('deleteTask');
@@ -20,7 +65,6 @@ $(function () {
   }
 
   function editTask(taskEl, task) {
-    console.log('editTask');
     taskEdit.find('[name="label"]').val(taskEl.find('.text').first().html());
     taskEdit.data('taskEl', taskEl);
     openTaskEdit(taskEl);
@@ -33,7 +77,8 @@ $(function () {
   function onTaskClick(event) {
     var target = $(event.target),
       taskEl = target.closest('.task'),
-      task = taskEl.closest('ul').data('task');
+      taskId = taskEl.closest('.taskContainer').data('taskId'),
+      task = taskManager.getById(taskId);
 
     if (event.target.tagName === 'INPUT') {
       // console.log(event.target.checked);
@@ -52,7 +97,7 @@ $(function () {
         toggleRecordTask(task);
         break;
       case 'button add':
-        addSubTask(taskEl);
+        task.addSubTask();
         break;
       default:
         console.error('What does this button do?');
@@ -65,12 +110,6 @@ $(function () {
 
     event.preventDefault();
     return false;
-  }
-
-  function getNewTaskElement() {
-    var newTask = new Task();
-    tasks.push(newTask);
-    return $(_.template($('#task-template').html(), {})).data('task', newTask);
   }
 
   function closeTaskEdit() {
@@ -86,7 +125,7 @@ $(function () {
   $('body').on('click', '.task .button, .task .label', onTaskClick);
 
   $('#newTask').click(function () {
-    $('#taskWrapper').append(getNewTaskElement());
+    new Task();
   });
 
   taskEdit.on('click', 'a', function (event) {
