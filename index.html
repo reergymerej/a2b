@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>a2b</title>
+  <link href="css/main.css" rel="stylesheet" type="text/css" />
+  <script type="text/template" id="task-template">
+    <li>
+      <div class="task">
+        <div class="label">
+          <div class="edge left"></div>
+          <div class="check">
+            <input type="checkbox" />
+          </div>
+          <div class="text">text goes here</div>
+          <div class="edge right"></div>
+        </div>
+        <div class="controls">
+          <span class="edge left"></span>
+          <span class="button edit"></span>
+          <span class="button x"></span>
+          <span class="button record"></span>
+          <span class="button add"></span>
+          <span class="edge right"></span>
+        </div>
+      </div>  
+      <ul class="subtasks"></ul>
+    </li>
+  </script>
+  <script type="text/javascript" src="js/underscore-min.js"></script>
+  <script type="text/javascript" src="js/jquery.min.js"></script>
+  <script type="text/javascript" src="js/main.js"></script>
+</head>
+<body>
+  <div id="taskEdit">
+    <div class="blackout"></div>
+    <form>
+      <input type="text" name="label" />
+      <textarea name="description"></textarea>
+      <div class="buttons">
+        <input type="submit" />
+        <a href="#">cancel</a>
+      </div>
+    </form>
+  </div>
+  <button id="newTask">new task</button>
+  <div id="taskWrapper"></div>
+</body>
+</html>

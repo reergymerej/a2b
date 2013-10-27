@@ -1,0 +1,95 @@
+body {
+  background-color: steelblue; }
+
+.task {
+  display: inline-block; }
+  .task .label {
+    height: 20px;
+    line-height: 20px; }
+    .task .label div {
+      float: left; }
+    .task .label .edge {
+      display: inline-block;
+      width: 5px;
+      height: 20px; }
+      .task .label .edge.left {
+        background: url("images/task-edge-left.png") no-repeat; }
+      .task .label .edge.right {
+        background: url("images/task-edge-right.png") no-repeat; }
+    .task .label .check {
+      display: inline-block;
+      width: 20px;
+      background: url("images/task.png") repeat-x; }
+      .task .label .check .input {
+        margin: auto; }
+    .task .label .text {
+      background: url("images/task.png") repeat-x;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-block;
+      width: 170px; }
+      .task .label .text.done {
+        text-decoration: line-through; }
+  .task .controls {
+    width: 126px;
+    margin: auto;
+    display: none; }
+    .task .controls span {
+      float: left; }
+    .task .controls .edge {
+      width: 13px;
+      height: 20px; }
+    .task .controls .edge.left {
+      background: url("images/edge-left.png") no-repeat; }
+    .task .controls .edge.right {
+      background: url("images/edge-right.png") no-repeat; }
+    .task .controls .button {
+      text-align: center;
+      width: 25px;
+      height: 20px; }
+      .task .controls .button:hover {
+        cursor: pointer;
+        background-position: 0px -20px; }
+      .task .controls .button.edit {
+        background-image: url("images/button-edit.png"); }
+      .task .controls .button.x {
+        background-image: url("images/button-x.png"); }
+      .task .controls .button.record {
+        background-image: url("images/button-record.png"); }
+      .task .controls .button.add {
+        background-image: url("images/button-add.png"); }
+
+#taskEdit {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden; }
+  #taskEdit .blackout {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background-color: #555;
+    opacity: .8;
+    z-index: 100; }
+  #taskEdit form {
+    position: relative;
+    z-index: 101;
+    width: 410px;
+    padding: 10px;
+    margin: 100px auto;
+    background-color: #999;
+    border-radius: 5px;
+    padding-bottom: 28px; }
+    #taskEdit form input[type="text"], #taskEdit form textarea, #taskEdit form .buttons {
+      display: block;
+      width: 402px;
+      border: 0;
+      padding: 4px; }
+    #taskEdit form .buttons a, #taskEdit form .buttons input {
+      float: right; }

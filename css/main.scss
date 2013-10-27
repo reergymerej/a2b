@@ -1,0 +1,175 @@
+@charset 'UTF-8';
+
+body {
+	background-color: steelblue;
+}
+
+.task {
+	$controlButtonWidth: 25px;
+	$controlButtonHeight: 20px;
+	$controlEdgeWidth: 13px;
+
+	display: inline-block;
+
+	// This is the visible part of the task.
+	.label {
+		$taskWidth: 200px;
+		$taskHeight: 20px;
+		$checkWidth: 20px;
+		$edgeWidth: 5px;
+
+		height: $taskHeight;
+		line-height: $taskHeight;
+
+		// test
+		$taskBg: url('images/task.png') repeat-x;
+
+		div {
+			float: left;
+		}
+		
+		// left/right edges
+		.edge {
+			display: inline-block;
+			width: $edgeWidth;
+			height: $taskHeight;
+
+			&.left {
+				background: url('images/task-edge-left.png') no-repeat;	
+			}
+
+			&.right {
+				background: url('images/task-edge-right.png') no-repeat;	
+			}
+		}
+
+		// checkbox
+		.check {
+			display: inline-block;
+			width: $checkWidth;
+			background: $taskBg;
+
+			.input {
+				margin: auto;
+			}
+		}
+
+		// visible label in task
+		.text {
+			background: $taskBg;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: inline-block;
+			width: $taskWidth - (2 * $edgeWidth) - $checkWidth;
+
+			&.done {
+				text-decoration: line-through;
+			}
+		}
+	}
+
+	// controls that appear under the task
+	.controls {
+
+		width: ($controlEdgeWidth * 2) + ($controlButtonWidth * 4);
+		margin: auto;
+
+		display: none;
+
+		span {
+			float: left;
+		}
+
+		.edge {
+			width: $controlEdgeWidth;
+			height: $controlButtonHeight;
+		}
+
+		.edge.left {
+			background: url('images/edge-left.png') no-repeat;
+		}
+
+		.edge.right {
+			background: url('images/edge-right.png') no-repeat;
+		}
+
+		.button {
+			// background-image: url('images/button.png');
+			text-align: center;
+			width: $controlButtonWidth;
+			height: $controlButtonHeight;
+
+			&:hover {
+				cursor: pointer;
+				background-position: 0px (-$controlButtonHeight);
+			}
+
+			&.edit {
+				background-image: url('images/button-edit.png');
+			} 
+
+			&.x {
+				background-image: url('images/button-x.png');
+			} 
+
+			&.record {
+				background-image: url('images/button-record.png');
+			} 
+
+			&.add {
+				background-image: url('images/button-add.png');
+			} 
+		}
+	}
+}
+
+#taskEdit {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	
+	.blackout {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100%;
+		width: 100%;
+		overflow: hidden;
+		background-color: #555;
+		opacity: .8;
+		z-index: 100;
+	}	
+
+	form {
+		position: relative;
+		z-index: 101;
+
+		$padding: 10px;
+		$width: 400px + $padding;
+		
+		width: $width;
+		padding: $padding;
+		margin: 100px auto;
+
+		background-color: #999;
+		border-radius: 5px;
+		padding-bottom: 28px;
+
+		input[type="text"], textarea, .buttons {
+			display: block;
+			$padding: 4px;
+			width: $width - $padding * 2;
+			border: 0;
+			padding: $padding;
+
+		}
+
+		.buttons a, .buttons input {
+			float: right;
+		}
+	}
+}
