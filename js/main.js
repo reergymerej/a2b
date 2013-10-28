@@ -8,12 +8,12 @@ function TaskManager() {
   this.tasks = [];
   this.taskMap = {};
   this.count = 0;
-  this.add = function(task) {
+  this.add = function (task) {
     var index = this.tasks.push(task) - 1;
     this.taskMap[task.id] = task;
     this.count++;
   };
-  this.getById = function(id) {
+  this.getById = function (id) {
     return this.taskMap[id];
   };
 }
@@ -36,7 +36,7 @@ function TaskEditor() {
   this.el.on('submit', 'form', function (event) {
     var valuesArr = $(this).serializeArray(),
       values = {};
-    
+
     $.each(valuesArr, function (index, pair) {
       values[pair.name] = pair.value;
     });
@@ -56,7 +56,7 @@ function TaskEditor() {
 
     this.el.find('[name="label"]').val(task.label);
     this.el.find('[name="description"]').val(task.description);
-    
+
     this.el.fadeIn('fast', function () {
       // me.el.find('input').first().focus();
       me.el.find('input').first().select();
@@ -66,7 +66,7 @@ function TaskEditor() {
   this.close = function () {
     this.el.fadeOut('fast');
   };
-};
+}
 
 // Task
 function Task(parentTaskId) {
@@ -115,7 +115,7 @@ Task.prototype.createEl = function () {
 
   this.el = $(_.template($('#task-template').html(), {})).data('taskId', this.id);
   this.el.attr('id', this.id);
-  
+
   if (this.parentTaskId === undefined) {
     $('#taskWrapper').append(this.el);
   } else {
@@ -127,10 +127,7 @@ Task.prototype.createEl = function () {
 Task.prototype.addSubTask = function () {
   this.subTasks.push(new Task(this.id));
 
-  // work up parent tasks and ensure they are not done
-  if (this.parentTaskId !== undefined) {
-    taskManager.getById(this.parentTaskId).setDone(false);
-  }
+  this.setDone(false);
 };
 
 Task.prototype.getEl = function () {
@@ -141,24 +138,53 @@ Task.prototype.getSubTaskEl = function () {
   return this.getEl().find('.subtasks').first();
 };
 
-Task.prototype.setDone = function (done) {
+/**
+* @param {Boolean} done
+* @param {Boolean} [finishChildTasks=true]
+*/
+Task.prototype.setDone = function (done, finishChildTasks) {
   var el = this.getEl(),
     text = el.find('.text').first(),
-    checkbox = el.find('input[type="checkbox"]').first();
+    checkbox = el.find('input[type="checkbox"]').first(),
+    parentTask;
+
+  if (finishChildTasks === undefined) {
+    finishChildTasks = true;
+  }
 
   checkbox.prop('checked', done);
   this.done = done;
 
+  if (this.parentTaskId !== undefined) {
+    parentTask = taskManager.getById(this.parentTaskId);
+  }
+
   if (done) {
     text.addClass('done');
-    $.each(this.subTasks, function (index, task) {
-      task.setDone(done);
-    });
+    if (finishChildTasks) {
+      $.each(this.subTasks, function (index, task) {
+        task.setDone(done);
+      });
+    }
+    parentTask.onSubTaskDone();
   } else {
     text.removeClass('done');
-    if (this.parentTaskId !== undefined) {
-      taskManager.getById(this.parentTaskId).setDone(done);
+    if (parentTask) {
+      parentTask.setDone(done);
     }
+  }
+};
+
+Task.prototype.onSubTaskDone = function () {
+  var subTasksDone = true;
+
+  $.each(this.subTasks, function (index, task) {
+    subTasksDone = !!task.done;
+    return subTasksDone;
+  });
+
+  if (subTasksDone) {
+    this.setDone(true, false);
   }
 };
 
@@ -167,40 +193,44 @@ Task.prototype.setDone = function (done) {
 $(function () {
 
   function onTaskClick(event) {
-    var target = $(event.target),
+    var returnValue,
+      target = $(event.target),
       taskEl = target.closest('.task'),
       taskId = taskEl.closest('.taskContainer').data('taskId'),
       task = taskManager.getById(taskId);
 
     if (event.target.tagName === 'INPUT') {
       task.setDone(event.target.checked);
-      return;
-    } else if (target.is('.button')) {
+    } else {
+      if (target.is('.button')) {
 
-      switch (event.target.className) {
-      case 'button edit':
-        task.edit();
-        break;
-      case 'button x':
-        task.destroy();
-        break;
-      case 'button record':
-        task.toggleRecord();
-        break;
-      case 'button add':
-        task.addSubTask();
-        break;
-      default:
-        console.error('What does this button do?');
+        switch (event.target.className) {
+        case 'button edit':
+          task.edit();
+          break;
+        case 'button x':
+          task.destroy();
+          break;
+        case 'button record':
+          task.toggleRecord();
+          break;
+        case 'button add':
+          task.addSubTask();
+          break;
+        default:
+          console.error('What does this button do?');
+        }
+
+      } else {
+        // toggle the controls
+        $(this).next().toggle();
       }
 
-    } else {
-      // toggle the controls
-      $(this).next().toggle();
+      event.preventDefault();
+      returnValue = false;
     }
 
-    event.preventDefault();
-    return false;
+    return returnValue;
   }
 
   $('body').on('click', '.task .button, .task .label', onTaskClick);
