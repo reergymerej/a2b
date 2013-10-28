@@ -78,7 +78,7 @@ function Task(parentTaskId) {
   taskManager.add(this);
   this.createEl();
   this.setLabel(this.label);
-  this.edit();
+  // this.edit();
 }
 
 Task.prototype.destroy = function () {
@@ -173,9 +173,8 @@ $(function () {
       task = taskManager.getById(taskId);
 
     if (event.target.tagName === 'INPUT') {
-      debugger;
       task.setDone(event.target.checked);
-      return false;
+      return;
     } else if (target.is('.button')) {
 
       switch (event.target.className) {
