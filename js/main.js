@@ -5,18 +5,34 @@ var taskEdit;
 
 // keeps track of all the Task instances
 function TaskManager() {
-  this.tasks = [];
   this.taskMap = {};
   this.count = 0;
-  this.add = function (task) {
-    var index = this.tasks.push(task) - 1;
-    this.taskMap[task.id] = task;
-    this.count++;
-  };
-  this.getById = function (id) {
-    return this.taskMap[id];
-  };
 }
+
+/**
+* @param {String/Number} [parentTaskId]
+* @return {Task}
+*/
+TaskManager.prototype.add = function (parentTaskId) {
+  var task = new Task(parentTaskId);
+  this.taskMap[task.id] = task;
+  this.count++;
+  return task;
+};
+
+TaskManager.prototype.getById = function (id) {
+  return this.taskMap[id];
+};
+
+/**
+* @param {Number/String} taskId
+*/
+TaskManager.prototype.remove = function (taskId) {
+  if (this.taskMap.hasOwnProperty(taskId)) {
+    delete this.taskMap[taskId];
+    this.count--;
+  }
+};
 
 // tool for editing a Task
 function TaskEditor() {
@@ -75,26 +91,27 @@ function Task(parentTaskId) {
   this.description = undefined;
   this.subTasks = [];
   this.parentTaskId = parentTaskId;
-  taskManager.add(this);
   this.createEl();
   this.setLabel(this.label);
   // this.edit();
 }
 
-Task.prototype.destroy = function () {
-  // confirm?
-  console.log('destroying task ' + this.id);
+/**
+* @param {Boolean} [skipConfirm]
+*/
+Task.prototype.destroy = function (skipConfirm) {
+  if (skipConfirm || confirm('Are you sure?')) {
+    // remove each subTask
+    $.each(this.subTasks, function (index, task) {
+      task.destroy(true);
+    });
 
-  // remove each subTask
-  $.each(this.subTasks, function (index, task) {
-    task.destroy();
-  });
+    // remove from TaskManager
+    taskManager.remove(this.id);
 
-  // remove from TaskManager
-  delete taskManager.taskMap[this.id];
-
-  // remove ui
-  this.getEl().remove();
+    // remove ui
+    this.getEl().remove();
+  }
 };
 
 Task.prototype.toggleRecord = function () {
@@ -125,8 +142,7 @@ Task.prototype.createEl = function () {
 };
 
 Task.prototype.addSubTask = function () {
-  this.subTasks.push(new Task(this.id));
-
+  this.subTasks.push(taskManager.add(this.id));
   this.setDone(false);
 };
 
@@ -166,7 +182,9 @@ Task.prototype.setDone = function (done, finishChildTasks) {
         task.setDone(done);
       });
     }
-    parentTask.onSubTaskDone();
+    if (parentTask) {
+      parentTask.onSubTaskDone();
+    }
   } else {
     text.removeClass('done');
     if (parentTask) {
@@ -198,6 +216,10 @@ $(function () {
       taskEl = target.closest('.task'),
       taskId = taskEl.closest('.taskContainer').data('taskId'),
       task = taskManager.getById(taskId);
+
+    if (!task) {
+      console.error('unable to figure out what task this is');
+    }
 
     if (event.target.tagName === 'INPUT') {
       task.setDone(event.target.checked);
@@ -236,7 +258,7 @@ $(function () {
   $('body').on('click', '.task .button, .task .label', onTaskClick);
 
   $('#newTask').click(function () {
-    new Task();
+    taskManager.add();
   });
 
   taskEditor = new TaskEditor();
