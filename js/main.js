@@ -69,6 +69,23 @@ function TaskEditor() {
 }
 
 // Task
+var TaskModel = Backbone.Model.extend({
+  urlRoot: '/task',
+  defaults: {
+    label: 'new task',
+    description: undefined,
+    done: false,
+    parentTaskId: undefined,
+    subTasks: []
+  },
+  initialize: function () {
+    console.log('new TaskModel', this);
+  },
+  validate: function () {
+    // return an error to fail validation
+  }
+});
+
 function Task(parentTaskId) {
   this.id = Date.now();
   this.label = 'new task #' + this.id;
@@ -166,7 +183,9 @@ Task.prototype.setDone = function (done, finishChildTasks) {
         task.setDone(done);
       });
     }
-    parentTask.onSubTaskDone();
+    if (parentTask) {
+      parentTask.onSubTaskDone();
+    }
   } else {
     text.removeClass('done');
     if (parentTask) {
