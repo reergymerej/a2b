@@ -56,6 +56,9 @@ body {
         background-image: url("images/button-x.png"); }
       .taskContainer .task .controls .button.record {
         background-image: url("images/button-record.png"); }
+      .taskContainer .task .controls .button.record.inProgress {
+        background-color: red;
+        background-image: none; }
       .taskContainer .task .controls .button.add {
         background-image: url("images/button-add.png"); }
 .taskContainer .subtasks {

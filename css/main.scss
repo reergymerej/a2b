@@ -116,6 +116,11 @@ body {
 
 				&.record {
 					background-image: url('images/button-record.png');
+				}
+
+				&.record.inProgress {
+					background-color: red;
+					background-image: none;
 				} 
 
 				&.add {

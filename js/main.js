@@ -94,6 +94,9 @@ function Task(parentTaskId) {
   this.createEl();
   this.setLabel(this.label);
   // this.edit();
+  this.work = [];
+  this.inProgress = false;
+  this.duration = 0;
 }
 
 /**
@@ -115,7 +118,51 @@ Task.prototype.destroy = function (skipConfirm) {
 };
 
 Task.prototype.toggleRecord = function () {
-  console.log('toggleRecord');
+  var el = this.getEl(),
+    button = el.find('.task .controls .record');
+
+  if (this.inProgress) {
+    this.pause();
+    button.removeClass('inProgress');
+  } else {
+    this.record();
+    button.addClass('inProgress');
+  }
+
+  this.inProgress = !this.inProgress;
+};
+
+/**
+* Start a new chunk of work.
+*/
+Task.prototype.record = function () {
+  this.work.push({
+    start: Date.now(),
+    end: undefined,
+    duration: undefined
+  });
+};
+
+/**
+* Complete the last chunk of work.
+* @return {Number} total miliseconds of work done for this Task
+*/
+Task.prototype.pause = function () {
+  var lastWork = this.work.pop(),
+    totalDuration = 0;
+
+  if (!lastWork.duration) {
+    lastWork.end = Date.now();
+    lastWork.duration = lastWork.end - lastWork.start;
+    this.work.push(lastWork);
+    $.each(this.work, function (i, work) {
+      totalDuration += work.duration;
+    });
+    this.duration = totalDuration;
+  } else {
+    console.error('this work has already been paused');
+  }
+  return this.duration;
 };
 
 Task.prototype.setLabel = function (label) {
@@ -226,6 +273,7 @@ $(function () {
     } else {
       if (target.is('.button')) {
 
+        // TODO don't switch on className
         switch (event.target.className) {
         case 'button edit':
           task.edit();
@@ -234,6 +282,7 @@ $(function () {
           task.destroy();
           break;
         case 'button record':
+        case 'button record inProgress':
           task.toggleRecord();
           break;
         case 'button add':
