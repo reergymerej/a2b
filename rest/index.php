@@ -16,7 +16,7 @@ $app->delete('/wines/:id',	'deleteWine');
 $app->run();
 
 function getWines() {
-	$sql = "select * FROM wine ORDER BY name";
+	$sql = "select * FROM task ORDER BY id";
 	try {
 		$db = getConnection();
 		$stmt = $db->query($sql);  
