@@ -86,13 +86,15 @@ function TaskEditor() {
 
 // Task
 var TaskModel = Backbone.Model.extend({
-  urlRoot: '/task',
+  urlRoot: 'resteasy/api/tasks',
   defaults: {
     label: 'new task',
     description: undefined,
-    done: false,
-    parentTaskId: undefined,
-    subTasks: []
+    start: undefined,
+    end: undefined,
+    duration: undefined,
+    inProgress: false,
+    parentTaskId: undefined
   },
   initialize: function () {
     console.log('new TaskModel', this);
@@ -191,6 +193,11 @@ Task.prototype.edit = function () {
   taskEditor.editTask(this);
 };
 
+Task.prototype.removeLabelClass = function (cls) {
+  this.getEl().find('.task .label').removeClass(cls);
+  console.log(this);
+};
+
 Task.prototype.createEl = function () {
   var parentTask;
 
@@ -201,6 +208,7 @@ Task.prototype.createEl = function () {
     $('#taskWrapper').append(this.el);
   } else {
     parentTask = taskManager.getById(this.parentTaskId);
+    parentTask.removeLabelClass('readyForWork');
     parentTask.getSubTaskEl().append(this.el);
   }
 };

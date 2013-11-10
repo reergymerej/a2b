@@ -2,9 +2,14 @@
 
 body {
 	background-color: steelblue;
+	font-family: monospace;
 }
 
 .taskContainer {
+	$taskBackground: rgba(211, 159, 236, 0.72);
+
+	list-style: none;
+
 	.task {
 		$controlButtonWidth: 25px;
 		$controlButtonHeight: 20px;
@@ -14,13 +19,18 @@ body {
 
 		// This is the visible part of the task.
 		.label {
-			$taskWidth: 200px;
+			$taskWidth: 300px;
+			$taskPadding: 10px;
 			$taskHeight: 20px;
 			$checkWidth: 20px;
 			$edgeWidth: 5px;
 
 			height: $taskHeight;
+			padding: $taskPadding;
 			line-height: $taskHeight;
+			border: 1px dotted yellow;
+			border-radius: 5px;
+			background-color: $taskBackground;
 
 			// test
 			$taskBg: url('images/task.png') repeat-x;
@@ -48,7 +58,7 @@ body {
 			.check {
 				display: inline-block;
 				width: $checkWidth;
-				background: $taskBg;
+				// background: $taskBg;
 
 				.input {
 					margin: auto;
@@ -57,7 +67,8 @@ body {
 
 			// visible label in task
 			.text {
-				background: $taskBg;
+				// background: $taskBg;
+				margin-left: 1em;
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
@@ -70,10 +81,15 @@ body {
 			}
 		}
 
+		.label.readyForWork {
+			background-color: lighten($taskBackground, 30);
+		}
+
 		// controls that appear under the task
 		.controls {
 
-			// display: none;
+			background-color: $taskBackground;
+			display: none;
 			width: ($controlEdgeWidth * 2) + ($controlButtonWidth * 4);
 			margin: auto;
 
@@ -88,7 +104,7 @@ body {
 			}
 
 			.edge.left {
-				background: url('images/edge-left.png') no-repeat;
+				// background: url('images/edge-left.png') no-repeat;
 			}
 
 			.edge.right {
@@ -96,35 +112,37 @@ body {
 			}
 
 			.button {
-				// background-image: url('images/button.png');
+				background-image: url('images/buttons.png');
+				background-color: $taskBackground;
 				text-align: center;
 				width: $controlButtonWidth;
 				height: $controlButtonHeight;
 
 				&:hover {
 					cursor: pointer;
-					background-position: 0px (-$controlButtonHeight);
+					background-color: darken($taskBackground, 30);
 				}
 
 				&.edit {
-					background-image: url('images/button-edit.png');
+					background-position: -$controlButtonWidth * 4;
 				} 
 
 				&.x {
-					background-image: url('images/button-x.png');
+					background-position: -$controlButtonWidth * 3;
 				} 
 
 				&.record {
-					background-image: url('images/button-record.png');
+					background-position: -$controlButtonWidth * 1;
 				}
 
 				&.record.inProgress {
+					background-position: -$controlButtonWidth * 2;
 					background-color: red;
 					background-image: none;
 				} 
 
 				&.add {
-					background-image: url('images/button-add.png');
+					background-position: -$controlButtonWidth * 0;
 				} 
 			}
 		}

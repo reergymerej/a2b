@@ -1,69 +1,80 @@
 body {
-  background-color: steelblue; }
+  background-color: steelblue;
+  font-family: monospace; }
 
-.taskContainer .task {
-  display: inline-block; }
-  .taskContainer .task .label {
-    height: 20px;
-    line-height: 20px; }
-    .taskContainer .task .label div {
-      float: left; }
-    .taskContainer .task .label .edge {
-      display: inline-block;
-      width: 5px;
-      height: 20px; }
-      .taskContainer .task .label .edge.left {
-        background: url("images/task-edge-left.png") no-repeat; }
-      .taskContainer .task .label .edge.right {
-        background: url("images/task-edge-right.png") no-repeat; }
-    .taskContainer .task .label .check {
-      display: inline-block;
-      width: 20px;
-      background: url("images/task.png") repeat-x; }
-      .taskContainer .task .label .check .input {
-        margin: auto; }
-    .taskContainer .task .label .text {
-      background: url("images/task.png") repeat-x;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: inline-block;
-      width: 170px; }
-      .taskContainer .task .label .text.done {
-        text-decoration: line-through; }
-  .taskContainer .task .controls {
-    width: 126px;
-    margin: auto; }
-    .taskContainer .task .controls span {
-      float: left; }
-    .taskContainer .task .controls .edge {
-      width: 13px;
-      height: 20px; }
-    .taskContainer .task .controls .edge.left {
-      background: url("images/edge-left.png") no-repeat; }
-    .taskContainer .task .controls .edge.right {
-      background: url("images/edge-right.png") no-repeat; }
-    .taskContainer .task .controls .button {
-      text-align: center;
-      width: 25px;
-      height: 20px; }
-      .taskContainer .task .controls .button:hover {
-        cursor: pointer;
-        background-position: 0px -20px; }
-      .taskContainer .task .controls .button.edit {
-        background-image: url("images/button-edit.png"); }
-      .taskContainer .task .controls .button.x {
-        background-image: url("images/button-x.png"); }
-      .taskContainer .task .controls .button.record {
-        background-image: url("images/button-record.png"); }
-      .taskContainer .task .controls .button.record.inProgress {
-        background-color: red;
-        background-image: none; }
-      .taskContainer .task .controls .button.add {
-        background-image: url("images/button-add.png"); }
-.taskContainer .subtasks {
-  margin-top: 0;
-  margin-bottom: 0; }
+.taskContainer {
+  list-style: none; }
+  .taskContainer .task {
+    display: inline-block; }
+    .taskContainer .task .label {
+      height: 20px;
+      padding: 10px;
+      line-height: 20px;
+      border: 1px dotted yellow;
+      border-radius: 5px;
+      background-color: rgba(211, 159, 236, 0.72); }
+      .taskContainer .task .label div {
+        float: left; }
+      .taskContainer .task .label .edge {
+        display: inline-block;
+        width: 5px;
+        height: 20px; }
+        .taskContainer .task .label .edge.left {
+          background: url("images/task-edge-left.png") no-repeat; }
+        .taskContainer .task .label .edge.right {
+          background: url("images/task-edge-right.png") no-repeat; }
+      .taskContainer .task .label .check {
+        display: inline-block;
+        width: 20px; }
+        .taskContainer .task .label .check .input {
+          margin: auto; }
+      .taskContainer .task .label .text {
+        margin-left: 1em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        width: 270px; }
+        .taskContainer .task .label .text.done {
+          text-decoration: line-through; }
+    .taskContainer .task .label.readyForWork {
+      background-color: rgba(255, 255, 255, 0.72); }
+    .taskContainer .task .controls {
+      background-color: rgba(211, 159, 236, 0.72);
+      display: none;
+      width: 126px;
+      margin: auto; }
+      .taskContainer .task .controls span {
+        float: left; }
+      .taskContainer .task .controls .edge {
+        width: 13px;
+        height: 20px; }
+      .taskContainer .task .controls .edge.right {
+        background: url("images/edge-right.png") no-repeat; }
+      .taskContainer .task .controls .button {
+        background-image: url("images/buttons.png");
+        background-color: rgba(211, 159, 236, 0.72);
+        text-align: center;
+        width: 25px;
+        height: 20px; }
+        .taskContainer .task .controls .button:hover {
+          cursor: pointer;
+          background-color: rgba(149, 40, 202, 0.72); }
+        .taskContainer .task .controls .button.edit {
+          background-position: -100px; }
+        .taskContainer .task .controls .button.x {
+          background-position: -75px; }
+        .taskContainer .task .controls .button.record {
+          background-position: -25px; }
+        .taskContainer .task .controls .button.record.inProgress {
+          background-position: -50px;
+          background-color: red;
+          background-image: none; }
+        .taskContainer .task .controls .button.add {
+          background-position: 0px; }
+  .taskContainer .subtasks {
+    margin-top: 0;
+    margin-bottom: 0; }
 
 #taskEdit {
   display: none;
